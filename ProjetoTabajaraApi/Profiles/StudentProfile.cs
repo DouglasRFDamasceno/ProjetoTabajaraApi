@@ -9,6 +9,11 @@ public class StudentProfile : Profile
     public StudentProfile()
     {
         CreateMap<CreateStudentDto, Student>();
-        CreateMap<Student, ReadStudentDto>();
+        CreateMap<Student, ReadStudentDto>()
+            .ForMember(
+                studentDto => 
+                studentDto.Address,
+                opt => opt.MapFrom(student => student.Address)
+            );
     }
 }

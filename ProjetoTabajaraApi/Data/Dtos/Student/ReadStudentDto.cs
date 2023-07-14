@@ -1,4 +1,4 @@
-using ProjetoTabajaraApi.Models;
+using ProjetoTabajaraApi.Data.Dtos.Address;
 
 namespace ProjetoTabajaraApi.Data.Dtos.Student;
 
@@ -11,6 +11,8 @@ public class ReadStudentDto
     public string MotherName { get; set; }
 
     public int AddressId { get; set; }
+
+    public virtual ReadAddressDto Address { get; set; }
 
     public DateTime DateOfBirth { get; set; }
 

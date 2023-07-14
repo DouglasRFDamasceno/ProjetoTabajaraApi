@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data.Dtos.Student;
 using ProjetoTabajaraApi.Services;
 
@@ -16,6 +17,7 @@ public class StudentController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public IActionResult CreateStudent(CreateStudentDto studentDto)
     {
         var result = _studentService.CreateStudent(studentDto);
@@ -24,12 +26,22 @@ public class StudentController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult UpdateStudentPatch(int id, [FromBody] UpdateStudentDto studentDto)
+    [Authorize]
+    public IActionResult UpdateStudent(int id, [FromBody] UpdateStudentDto studentDto)
     {
-        var student = _studentService.UpdateStudentPatch(id, studentDto);
+        var student = _studentService.UpdateStudent(id, studentDto);
 
         if (student == null) return NotFound();
 
         return Ok($"Usuário {student!.Name} criado com sucesso.");
+    }
+
+    [HttpGet("{id}")]
+    [Authorize]
+    public IActionResult GetStudent(int id)
+    {
+        var studentDto = _studentService.GetStudent(id);
+
+        return Ok(studentDto);
     }
 }

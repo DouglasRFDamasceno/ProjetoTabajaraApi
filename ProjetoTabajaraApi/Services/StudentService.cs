@@ -20,6 +20,7 @@ public class StudentService
     {
         Student student = _mapper!.Map<Student>(studentDto);
 
+        _context.Students.Add(student);
         _context.SaveChanges();
 
         if (student == null)
@@ -43,7 +44,7 @@ public class StudentService
         return studentDto;
     }
 
-    public UpdateStudentDto? UpdateStudentPatch(int id, UpdateStudentDto studentDto)
+    public UpdateStudentDto? UpdateStudent(int id, UpdateStudentDto studentDto)
     {
         var student = _context!.Students?.FirstOrDefault(student => student.Id == id);
 

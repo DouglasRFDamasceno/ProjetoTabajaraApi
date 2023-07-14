@@ -12,7 +12,7 @@ var userConnection = builder.Configuration["ConnectionStrings:UserConnection:"];
 // Add services to the container.
 builder.Services.AddDbContext<appDbContext>(opts =>
 {
-    opts.UseMySql(userConnection, ServerVersion.AutoDetect(userConnection));
+    opts.UseLazyLoadingProxies().UseMySql(userConnection, ServerVersion.AutoDetect(userConnection));
 });
 
 builder.Services
@@ -47,6 +47,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<AddressService>();
 
 var app = builder.Build();
 
