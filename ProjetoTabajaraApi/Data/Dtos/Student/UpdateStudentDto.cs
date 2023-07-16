@@ -22,7 +22,6 @@ public class UpdateStudentDto
     public int AddressId { get; set; }
 
     [Required(ErrorMessage = "A data de nascimento é obrigatória")]
-    [MaxLength(255)]
     public DateTime DateOfBirth { get; set; }
 
     [MaxLength(255)]

@@ -16,7 +16,7 @@ public class AddressService
         _context = context;
     }
 
-    public string CreateAddress(CreateAddressDto addressDto)
+    public Address CreateAddress(CreateAddressDto addressDto)
     {
         Address address = _mapper!.Map<Address>(addressDto);
 
@@ -28,7 +28,7 @@ public class AddressService
             throw new ApplicationException("Falha ao cadastrar o estudante");
         }
 
-        return "Endereço cadastrado com sucesso.";
+        return address;
     }
 
     public ReadAddressDto? GetAddress(int id)
@@ -44,7 +44,7 @@ public class AddressService
         return addressDto;
     }
 
-    public UpdateAddressDto? UpdateAddress(int id, UpdateAddressDto addressDto)
+    public Address? UpdateAddress(int id, UpdateAddressDto addressDto)
     {
         var address = _context!.Adresses?.FirstOrDefault(address => address.Id == id);
 
@@ -53,6 +53,28 @@ public class AddressService
         _mapper.Map(addressDto, address);
         _context.SaveChanges();
 
-        return addressDto;
+        return address;
+    }
+
+    public bool DeleteAddress(int id)
+    {
+        var address = _context.Adresses.FirstOrDefault(address => address.Id == id);
+
+        if (address == null) return false;
+
+        _context.Remove(address);
+        _context.SaveChanges();
+
+        return true;
+    }
+
+    public List<Address>? GetAdresses(int skip, int take)
+    {
+        List<Address>? adresses = _context!.Adresses?
+            .Skip(skip)
+            .Take(take)
+            .ToList();
+
+        return adresses;
     }
 }

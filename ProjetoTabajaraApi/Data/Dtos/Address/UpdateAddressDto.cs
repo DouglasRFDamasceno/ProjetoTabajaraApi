@@ -4,6 +4,8 @@ namespace ProjetoTabajaraApi.Data.Dtos.Address;
 
 public class UpdateAddressDto
 {
+    [Key] public int Id { get; set; }
+
     [Required(ErrorMessage = "O cep é obrigatório")]
     [MaxLength(255)]
     public string ZipCode { get; set; }

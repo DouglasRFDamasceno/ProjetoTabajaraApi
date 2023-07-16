@@ -18,14 +18,14 @@ public class StudentController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public IActionResult CreateStudent(CreateStudentDto studentDto)
+    public CreatedAtActionResult CreateStudent(CreateStudentDto studentDto)
     {
-        var result = _studentService.CreateStudent(studentDto);
+        var student = _studentService.CreateStudent(studentDto);
 
-        return Ok(result);
+        return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, student);
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     [Authorize]
     public IActionResult UpdateStudent(int id, [FromBody] UpdateStudentDto studentDto)
     {
@@ -33,7 +33,7 @@ public class StudentController : ControllerBase
 
         if (student == null) return NotFound();
 
-        return Ok($"Usuário {student!.Name} criado com sucesso.");
+        return NoContent();
     }
 
     [HttpGet("{id}")]
@@ -43,5 +43,25 @@ public class StudentController : ControllerBase
         var studentDto = _studentService.GetStudent(id);
 
         return Ok(studentDto);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult GetStudents(int skip = 0, int take = 50)
+    {
+        var studentsDto = _studentService.GetStudents(skip, take);
+
+        return Ok(studentsDto);
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize]
+    public IActionResult DeleteStudent(int id)
+    {
+        var deletedStudent = _studentService.DeleteStudent(id);
+
+        if (!deletedStudent) return NotFound();
+
+        return NoContent();
     }
 }
