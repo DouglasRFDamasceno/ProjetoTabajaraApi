@@ -9,8 +9,13 @@ namespace ProjetoTabajaraApi.Controllers
     {
         [HttpGet]
         [Authorize]
+<<<<<<< HEAD
         public IActionResult Get() {
             return Ok("Acesso permitido!");
+=======
+        public bool Get() {
+            return true;
+>>>>>>> develop
         }
     }
 }

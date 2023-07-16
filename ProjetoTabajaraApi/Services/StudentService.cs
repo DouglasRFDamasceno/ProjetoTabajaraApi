@@ -16,10 +16,18 @@ public class StudentService
         _context = context;
     }
 
+<<<<<<< HEAD
     public ReadStudentDto CreateStudent(CreateStudentDto studentDto)
     {
         Student student = _mapper!.Map<Student>(studentDto);
 
+=======
+    public Student CreateStudent(CreateStudentDto studentDto)
+    {
+        Student student = _mapper!.Map<Student>(studentDto);
+
+        _context.Students.Add(student);
+>>>>>>> develop
         _context.SaveChanges();
 
         if (student == null)
@@ -27,7 +35,11 @@ public class StudentService
             throw new ApplicationException("Falha ao cadastrar o estudante");
         }
 
+<<<<<<< HEAD
         return GetStudent(student.Id);
+=======
+        return student;
+>>>>>>> develop
     }
 
     public ReadStudentDto? GetStudent(int id)
@@ -43,7 +55,11 @@ public class StudentService
         return studentDto;
     }
 
+<<<<<<< HEAD
     public UpdateStudentDto? UpdateStudentPatch(int id, UpdateStudentDto studentDto)
+=======
+    public UpdateStudentDto? UpdateStudent(int id, UpdateStudentDto studentDto)
+>>>>>>> develop
     {
         var student = _context!.Students?.FirstOrDefault(student => student.Id == id);
 
@@ -54,4 +70,29 @@ public class StudentService
 
         return studentDto;
     }
+<<<<<<< HEAD
+=======
+
+    public bool DeleteStudent(int id)
+    {
+        var student = _context.Students.FirstOrDefault(student => student.Id == id);
+
+        if (student == null) return false;
+
+        _context.Remove(student);
+        _context.SaveChanges();
+        return true;
+    }
+
+    public List<Student>? GetStudents(int skip, int take)
+    {
+        List<Student>? students = _context!.Students?
+            .OrderByDescending(student => student.Name)
+            .Skip(skip)
+            .Take(take)
+            .ToList();
+
+        return students;
+    }
+>>>>>>> develop
 }

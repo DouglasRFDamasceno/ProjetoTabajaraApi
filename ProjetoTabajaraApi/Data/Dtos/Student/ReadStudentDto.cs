@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 using ProjetoTabajaraApi.Models;
+=======
+using ProjetoTabajaraApi.Data.Dtos.Address;
+>>>>>>> develop
 
 namespace ProjetoTabajaraApi.Data.Dtos.Student;
 
@@ -12,6 +16,11 @@ public class ReadStudentDto
 
     public int AddressId { get; set; }
 
+<<<<<<< HEAD
+=======
+    public virtual ReadAddressDto Address { get; set; }
+
+>>>>>>> develop
     public DateTime DateOfBirth { get; set; }
 
     public string Observation { get; set; }
