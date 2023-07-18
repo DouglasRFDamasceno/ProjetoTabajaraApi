@@ -8,12 +8,15 @@ namespace ProjetoTabajaraApi.Services
 {
     public class TokenService
     {
+        public IConfiguration _configuration { get; private set; }
+        // string symmetricSecurityKey;
+
         public TokenService(IConfiguration configuration)
         {
+            // DotNetEnv.Env.Load();
+            // symmetricSecurityKey = Environment.GetEnvironmentVariable("SYMMETRIC_SECURITY_KEY");
             _configuration = configuration;
         }
-
-        public IConfiguration _configuration { get; private set; }
 
         public string GenerateToken(User user)
         {
@@ -25,16 +28,17 @@ namespace ProjetoTabajaraApi.Services
                 new Claim(ClaimTypes.Email, user.Email),
             };
 
+            var symmetricSecurityKey = _configuration.GetConnectionString("SYMMETRIC_SECURITY_KEY");
             var key = new SymmetricSecurityKey
             (
-                Encoding.UTF8.GetBytes(_configuration["SymmetricSecurityKey"])
+                Encoding.UTF8.GetBytes(symmetricSecurityKey)
             );
 
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken
             (
-                expires: DateTime.UtcNow.AddMinutes(10),
+                expires: DateTime.UtcNow.AddMinutes(60),
                 claims: claims,
                 signingCredentials: signingCredentials
             );

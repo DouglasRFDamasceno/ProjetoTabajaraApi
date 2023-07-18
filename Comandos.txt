@@ -1,0 +1,4 @@
+// Acessando o banco pelo terminal 
+docker exec -it container_id bash
+mysql -u root -proot
+show databases;

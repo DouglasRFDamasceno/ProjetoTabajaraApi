@@ -13,7 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var dbConnection = builder.Configuration["DbConnection"];
+DotNetEnv.Env.Load();
+// string dbConnection = builder.Configuration.GetConnectionString("DB_CONNECTION");
+string dbConnection = Environment.GetEnvironmentVariable("DB_CONNECTION");
+
+System.Console.WriteLine(dbConnection);
 
 // Add services to the container.
 builder.Services.AddDbContext<appDbContext>(opts =>
@@ -27,8 +31,10 @@ builder.Services
     .AddEntityFrameworkStores<appDbContext>()
     .AddDefaultTokenProviders();
 
-var symmetricSecurityKey = builder.Configuration["SymmetricSecurityKey"];
+// string symmetricSecurityKey = builder.Configuration.GetConnectionString("SYMMETRIC_SECURITY_KEY");
+string symmetricSecurityKey = Environment.GetEnvironmentVariable("SYMMETRIC_SECURITY_KEY");
 
+System.Console.WriteLine(symmetricSecurityKey);
 builder.Services.AddAuthentication(opts =>
     opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme
 ).AddJwtBearer(opts =>
@@ -65,5 +71,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<appDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
