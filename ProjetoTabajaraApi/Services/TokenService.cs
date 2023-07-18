@@ -9,12 +9,9 @@ namespace ProjetoTabajaraApi.Services
     public class TokenService
     {
         public IConfiguration _configuration { get; private set; }
-        // string symmetricSecurityKey;
 
         public TokenService(IConfiguration configuration)
         {
-            // DotNetEnv.Env.Load();
-            // symmetricSecurityKey = Environment.GetEnvironmentVariable("SYMMETRIC_SECURITY_KEY");
             _configuration = configuration;
         }
 
