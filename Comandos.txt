@@ -2,3 +2,6 @@
 docker exec -it container_id bash
 mysql -u root -proot
 show databases;
+
+kubectl annotate deployment projeto-tabajara-deployment kubernetes.io/change-cause="Subindo o sistema na versão 1.0"
+kubectl rollout history deployment projeto-tabajara-deployment

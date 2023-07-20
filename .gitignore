@@ -363,3 +363,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+ProjetoTabajaraApi/Kubernets/db-configMap.yaml
+ProjetoTabajaraApi/Kubernets/projeto-tabajara-configMap.yaml
