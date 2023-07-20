@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: projeto-tabajara-deployment
+spec:
+  template:
+    metadata:
+      name: projeto-tabajara
+      labels:
+        app: projeto-tabajara
+    spec:
+      containers:
+        - name: projeto-tabajara-container
+          image: douglasrfdamasceno/projetotabajara:1.1
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: projeto-config-map
+  replicas: 1
+  selector:
+    matchLabels:
+      app: projeto-tabajara

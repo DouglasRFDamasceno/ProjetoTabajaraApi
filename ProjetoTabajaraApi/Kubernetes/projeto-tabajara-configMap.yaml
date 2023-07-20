@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: projeto-config-map
+data:
+  SYMMETRIC_SECURITY_KEY: fddJDCC24fsVHfs432sq@sdzxfgdFDGmnb6459vagSDFGFdasdDSm53n1bbv1mnuyioigsd432EL54F3@4643GFDsgsdg
+  HOST_DB: svc-db-projeto-deployment
+  PORT_DB: "3306"
+  USER_DB: root
+  PASS_DB: 0IfghGb!f$1Oruwa0Y4
+  DATABASE_DB: projetotabajara

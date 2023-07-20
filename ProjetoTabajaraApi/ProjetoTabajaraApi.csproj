@@ -4,7 +4,6 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	  <UserSecretsId>07ad3ccc-c417-45a3-8e83-c3ecd864040f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="DotNetEnv" Version="2.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.14" />
