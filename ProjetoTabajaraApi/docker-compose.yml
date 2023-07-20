@@ -3,19 +3,22 @@ version: '3.9'
 services:
   mysql:
     image: mysql:5.7
+    container_name: projetoTabajaraMysql
     networks:
       - projetotabajara-bridge
     ports:
       - 3307:3307
     restart: always
     environment: 
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${PASS_DB}
+      MYSQL_PASSWORD: ${PASS_DB}
+      MYSQL_DATABASE: ${DATABASE_DB}
     volumes:
       - mysql-db:/var/lib/mysql
 
   projetoTabajaraApi:
-    image: projetotabajara
-    container_name: ProjetoTabajaraApi
+    image: douglasrfdamasceno/projetotabajara:1.0
+    container_name: projetoTabajaraApi
     networks:
       - projetotabajara-bridge
     build:
@@ -24,7 +27,11 @@ services:
       - 8080:80
     environment:
       - SYMMETRIC_SECURITY_KEY=${SYMMETRIC_SECURITY_KEY}
-      - DB_CONNECTION=${DB_CONNECTION}
+      - HOST_DB=${HOST_DB}
+      - PORT_DB=${PORT_DB}
+      - USER_DB=${USER_DB}
+      - PASS_DB=${PASS_DB}
+      - DATABASE_DB=${DATABASE_DB}
     depends_on:
       - mysql
 
