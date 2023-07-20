@@ -26,15 +26,7 @@ System.Console.WriteLine(dbConnection);
 // Add services to the container.
 builder.Services.AddDbContext<appDbContext>(opts =>
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    opts.UseMySql(userConnection, ServerVersion.AutoDetect(userConnection));
-=======
-    opts.UseLazyLoadingProxies().UseMySql(userConnection, ServerVersion.AutoDetect(userConnection));
->>>>>>> develop
-=======
     opts.UseLazyLoadingProxies().UseMySql(dbConnection, ServerVersion.AutoDetect(dbConnection));
->>>>>>> develop
 });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -67,10 +59,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<StudentService>();
-<<<<<<< HEAD
-=======
 builder.Services.AddScoped<AddressService>();
->>>>>>> develop
 
 var app = builder.Build();
 
