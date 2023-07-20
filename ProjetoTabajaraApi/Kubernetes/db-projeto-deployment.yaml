@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-projeto-deployment
+spec:
+  selector:
+    matchLabels:
+      app: db-projeto
+  template:
+    metadata:
+      name: db-projeto
+      labels:
+        app: db-projeto
+    spec:
+      containers:
+        - name: db-projeto-tabajara-container
+          image: mysql:5.7
+          ports:
+            - containerPort: 3306
+              name: db-projeto
+          envFrom:
+            - configMapRef:
+                name: db-config-map
+          volumeMounts:
+            - name: db-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: db-persistent-storage
+          persistentVolumeClaim:
+            claimName: db-pv-claim
