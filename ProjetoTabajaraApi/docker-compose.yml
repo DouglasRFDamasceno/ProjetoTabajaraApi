@@ -1,21 +1,6 @@
 version: '3.9'
 
 services:
-  mysql:
-    image: mysql:5.7
-    container_name: projetoTabajaraMysql
-    networks:
-      - projetotabajara-bridge
-    ports:
-      - 3307:3307
-    restart: always
-    environment: 
-      MYSQL_ROOT_PASSWORD: ${PASS_DB}
-      MYSQL_PASSWORD: ${PASS_DB}
-      MYSQL_DATABASE: ${DATABASE_DB}
-    volumes:
-      - mysql-db:/var/lib/mysql
-
   projetoTabajaraApi:
     image: douglasrfdamasceno/projetotabajara:1.0
     container_name: projetoTabajaraApi
@@ -38,6 +23,3 @@ services:
 networks:
   projetotabajara-bridge:
     driver: bridge
-
-volumes:
-  mysql-db:
