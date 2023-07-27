@@ -21,7 +21,6 @@ string DATABASE_DB = Environment.GetEnvironmentVariable("DATABASE_DB") ?? "";
 string USER_DB = Environment.GetEnvironmentVariable("USER_DB") ?? "";
 string PASS_DB = Environment.GetEnvironmentVariable("PASS_DB") ?? "";
 string dbConnection = $"server={HOST_DB};port={PORT_DB};database={DATABASE_DB};user={USER_DB};password={PASS_DB}";
-System.Console.WriteLine(dbConnection);
 
 // Add services to the container.
 builder.Services.AddDbContext<appDbContext>(opts =>
