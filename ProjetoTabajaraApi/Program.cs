@@ -14,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 DotNetEnv.Env.Load();
+// Teste
 string HOST_DB = Environment.GetEnvironmentVariable("HOST_DB") ?? "";
 string PORT_DB = Environment.GetEnvironmentVariable("PORT_DB") ?? "";
 string DATABASE_DB = Environment.GetEnvironmentVariable("DATABASE_DB") ?? "";
