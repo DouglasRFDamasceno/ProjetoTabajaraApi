@@ -9,9 +9,6 @@ public class StudentProfile : Profile
     public StudentProfile()
     {
         CreateMap<CreateStudentDto, Student>();
-<<<<<<< HEAD
-        CreateMap<Student, ReadStudentDto>();
-=======
         CreateMap<UpdateStudentDto, Student>();
         CreateMap<Student, UpdateStudentDto>();
         CreateMap<ReadStudentDto, Student>();
@@ -21,6 +18,5 @@ public class StudentProfile : Profile
                 studentDto.Address,
                 opt => opt.MapFrom(student => student.Address)
             );
->>>>>>> develop
     }
 }

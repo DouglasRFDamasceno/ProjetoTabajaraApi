@@ -35,7 +35,6 @@ builder.Services
     .AddEntityFrameworkStores<appDbContext>()
     .AddDefaultTokenProviders();
 
-// string symmetricSecurityKey = builder.Configuration.GetConnectionString("SYMMETRIC_SECURITY_KEY");
 string symmetricSecurityKey = Environment.GetEnvironmentVariable("SYMMETRIC_SECURITY_KEY");
 
 builder.Services.AddAuthentication(opts =>
