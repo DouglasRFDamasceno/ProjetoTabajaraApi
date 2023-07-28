@@ -25,7 +25,7 @@ namespace ProjetoTabajaraApi.Services
                 new Claim(ClaimTypes.Email, user.Email),
             };
 
-            var symmetricSecurityKey = _configuration.GetConnectionString("SYMMETRIC_SECURITY_KEY");
+            var symmetricSecurityKey = Environment.GetEnvironmentVariable("SYMMETRIC_SECURITY_KEY") ?? "";
             var key = new SymmetricSecurityKey
             (
                 Encoding.UTF8.GetBytes(symmetricSecurityKey)

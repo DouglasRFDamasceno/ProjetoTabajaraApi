@@ -12,6 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
 
 DotNetEnv.Env.Load();
 // Teste
@@ -21,6 +30,8 @@ string DATABASE_DB = Environment.GetEnvironmentVariable("DATABASE_DB") ?? "";
 string USER_DB = Environment.GetEnvironmentVariable("USER_DB") ?? "";
 string PASS_DB = Environment.GetEnvironmentVariable("PASS_DB") ?? "";
 string dbConnection = $"server={HOST_DB};port={PORT_DB};database={DATABASE_DB};user={USER_DB};password={PASS_DB}";
+
+Console.Write(dbConnection);
 
 // Add services to the container.
 builder.Services.AddDbContext<appDbContext>(opts =>
@@ -34,7 +45,7 @@ builder.Services
     .AddEntityFrameworkStores<appDbContext>()
     .AddDefaultTokenProviders();
 
-string symmetricSecurityKey = Environment.GetEnvironmentVariable("SYMMETRIC_SECURITY_KEY");
+string symmetricSecurityKey = Environment.GetEnvironmentVariable("SYMMETRIC_SECURITY_KEY") ?? "";
 
 builder.Services.AddAuthentication(opts =>
     opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme
@@ -61,17 +72,21 @@ builder.Services.AddScoped<AddressService>();
 
 var app = builder.Build();
 
+
 app.UseSwagger();
 
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
+app.UseCors("MyPolicy");
+
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 using (var scope = app.Services.CreateScope())
 {
