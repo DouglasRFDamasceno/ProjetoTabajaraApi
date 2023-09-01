@@ -32,10 +32,11 @@ namespace ProjetoTabajaraApi.Services
             );
 
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var tokenExpirationInMinutes = int.Parse(_configuration["tokenExpirationInMinutes"]);
 
             var token = new JwtSecurityToken
             (
-                expires: DateTime.UtcNow.AddMinutes(60),
+                expires: DateTime.UtcNow.AddMinutes(tokenExpirationInMinutes),
                 claims: claims,
                 signingCredentials: signingCredentials
             );

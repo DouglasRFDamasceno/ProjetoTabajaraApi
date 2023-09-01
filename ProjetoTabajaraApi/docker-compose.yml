@@ -1,22 +1,33 @@
 version: '3.9'
 
 services:
-  projetoTabajaraApi:
-    image: douglasrfdamasceno/projetotabajara:1.1
-    container_name: projetoTabajaraApi
+  projetotabajarafront:
+    image: douglasrfdamasceno/projetotabajarafront:1.1
+    container_name: projetoTabajaraFront
     networks:
       - projetotabajara-bridge
     build:
       context: .
     ports:
+      - 80
+  projetoTabajaraApi:
+    image: douglasrfdamasceno/projetotabajaraapi:1.0
+    container_name: projetoTabajaraApi
+    networks:
+      - projetotabajarafront-bridge
+    build:
+      context: .
+    ports:
       - 8080:80
     environment:
-      - SYMMETRIC_SECURITY_KEY=${SYMMETRIC_SECURITY_KEY}
-      - HOST_DB=${HOST_DB}
-      - PORT_DB=${PORT_DB}
-      - USER_DB=${USER_DB}
-      - PASS_DB=${PASS_DB}
-      - DATABASE_DB=${DATABASE_DB}
+      - SYMMETRIC_SECURITY_KEY="fddJCsVHfs432sq@sdzxfgm53nyid432EL54F3@4643GDdg"
+      - HOST_DB="ls-c85ebda18757ee604f814cb58d3e49c64b4f4d69.ccsecqchzmft.us-east-1.rds.amazonaws.com"
+      - PORT_DB="3306"
+      - USER_DB="admin"
+      - PASS_DB="p)1CLgnv#x=!;4Y&D6+kZSol9&;SS:W3"
+      - DATABASE_DB=dbprojetotabajara
 networks:
   projetotabajara-bridge:
+    driver: bridge
+  projetotabajarafront-bridge:
     driver: bridge

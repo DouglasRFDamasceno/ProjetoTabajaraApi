@@ -17,11 +17,12 @@ public class AddressController : ControllerBase
         _addressService = addressService;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
+    [Authorize]
     public CreatedAtActionResult CreateAddress(CreateAddressDto addressDto)
     {
         var address = _addressService.CreateAddress(addressDto);
-        return CreatedAtAction(nameof(GetAddress), new { id = address.Id }, address); ;
+        return CreatedAtAction(nameof(GetAddress), new { id = address.Id }, address);
     }
 
     [HttpGet("{id}")]

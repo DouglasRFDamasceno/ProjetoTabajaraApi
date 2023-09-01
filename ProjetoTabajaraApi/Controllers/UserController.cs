@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Castle.Core.Resource;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data.Dtos.User;
 using ProjetoTabajaraApi.Services;
 using System.Net.Http.Headers;
-using System.Runtime.Intrinsics.X86;
 using System.Text;
-using static System.Net.WebRequestMethods;
 
 namespace ProjetoTabajaraApi.Controllers
 {
@@ -14,14 +15,17 @@ namespace ProjetoTabajaraApi.Controllers
     public class UserController : ControllerBase
     {
         public UserService _userService;
+        private IConfiguration _configuration;
 
-        public UserController(UserService userService)
+        public UserController(
+            UserService userService,
+            IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
 
-        [HttpPost("create")]
-        [Authorize]
+        [HttpPost("create"), Authorize]
         public async Task<IActionResult> CreateUser(CreateUserDto userDto)
         {
             await _userService.CreateUser(userDto);
@@ -29,24 +33,26 @@ namespace ProjetoTabajaraApi.Controllers
             return Ok("Usuário cadastrado com sucesso!");
         }
 
-        //[HttpPost("login")]
-        //public async Task<string> Login([FromHeader] string UserName, [FromHeader] string Password)
-        //{
-        //    LoginUserDto loginDto = new LoginUserDto
-        //    {
-        //        UserName = UserName,
-        //        Password = Password
-        //    };
+        [HttpGet(""), Authorize]
+        public IActionResult GetUsers(int skip = 0, int take = 50)
+        {
+            var usersDto = _userService.GetUsers(skip, take);
 
-        //    Console.Write($"{UserName} e ${Password}");
-        //    var token = await _userService.Login(loginDto);
-        //    return token;
-        //}
+            return Ok(usersDto);
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchUser(string id, [FromBody] JsonPatchDocument<UpdateUserDto> patch)
+        {
+            await Console.Out.WriteLineAsync(id);
+
+            return Ok();
+            //return await _userService.PatchUser(patch);
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login()
         {
-            await Console.Out.WriteLineAsync(Request.Headers["Authorization"]);
             if (!Request.Headers.ContainsKey("Authorization"))
             {
                 // Return unauthorized status if the Authorization header is missing
@@ -85,7 +91,8 @@ namespace ProjetoTabajaraApi.Controllers
             {
                 jwt = token,
                 userName,
-            }); // Return the token as response
+                expirationInMinutes = int.Parse(_configuration["tokenExpirationInMinutes"])
+            }) ; // Return the token as response
         }
     }
 }

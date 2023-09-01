@@ -9,6 +9,10 @@ namespace ProjetoTabajaraApi.Profiles
         public UserProfile()
         {
             CreateMap<CreateUserDto, User>();
+            CreateMap<User, ReadUserDto>();
+            CreateMap<ReadUserDto, User>();
+            CreateMap<UpdateUserDto, User>();
+            CreateMap<User, UpdateUserDto>();
         }
     }
 }

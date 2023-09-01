@@ -13,6 +13,9 @@ public class UpdateAddressDto
     [MaxLength(255)]
     public string Street { get; set; }
 
+    [MaxLength(255)]
+    public string Complement { get; set; }
+
     [Required(ErrorMessage = "O numero é obrigatório")]
     [MaxLength(255)]
     public string Number { get; set; }

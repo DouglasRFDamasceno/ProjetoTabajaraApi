@@ -17,6 +17,7 @@ public class StudentService
     }
     public Student CreateStudent(CreateStudentDto studentDto)
     {
+        Console.WriteLine(studentDto);
         Student student = _mapper!.Map<Student>(studentDto);
 
         _context.Students.Add(student);
@@ -66,14 +67,25 @@ public class StudentService
         return true;
     }
 
-    public List<Student>? GetStudents(int skip, int take)
+    public List<ReadStudentDto> GetStudents(int skip, int take)
     {
-        List<Student>? students = _context!.Students?
-            .OrderByDescending(student => student.Name)
-            .Skip(skip)
-            .Take(take)
-            .ToList();
+        try
+        {
+            List<Student>? students = _context!.Students?
+                .OrderByDescending(student => student.Name)
+                .Skip(skip)
+                .Take(take)
+                .ToList();
 
-        return students;
+            if (students == null) return new List<ReadStudentDto>();
+
+            var studentsDto = _mapper.Map<List<ReadStudentDto>>(students);
+
+            return studentsDto;
+        } catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return new List<ReadStudentDto>();
+        }
     }
 }

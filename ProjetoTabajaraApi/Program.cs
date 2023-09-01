@@ -9,7 +9,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -23,15 +23,13 @@ builder.Services.AddCors(options =>
 });
 
 DotNetEnv.Env.Load();
-// Teste
+
 string HOST_DB = Environment.GetEnvironmentVariable("HOST_DB") ?? "";
 string PORT_DB = Environment.GetEnvironmentVariable("PORT_DB") ?? "";
 string DATABASE_DB = Environment.GetEnvironmentVariable("DATABASE_DB") ?? "";
 string USER_DB = Environment.GetEnvironmentVariable("USER_DB") ?? "";
 string PASS_DB = Environment.GetEnvironmentVariable("PASS_DB") ?? "";
 string dbConnection = $"server={HOST_DB};port={PORT_DB};database={DATABASE_DB};user={USER_DB};password={PASS_DB}";
-
-Console.Write(dbConnection);
 
 // Add services to the container.
 builder.Services.AddDbContext<appDbContext>(opts =>

@@ -11,8 +11,8 @@ using ProjetoTabajaraApi.Data;
 namespace ProjetoTabajaraApi.Migrations
 {
     [DbContext(typeof(appDbContext))]
-    [Migration("20230713212305_Atualizando-banco")]
-    partial class Atualizandobanco
+    [Migration("20230802115835_Estudante e endereço")]
+    partial class Estudanteeendereço
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -160,6 +160,11 @@ namespace ProjetoTabajaraApi.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("Complement")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -205,7 +210,6 @@ namespace ProjetoTabajaraApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasMaxLength(255)
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("FatherName")

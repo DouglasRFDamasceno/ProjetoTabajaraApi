@@ -16,12 +16,12 @@ public class StudentController : ControllerBase
         _studentService = studentService;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     [Authorize]
     public CreatedAtActionResult CreateStudent(CreateStudentDto studentDto)
     {
         var student = _studentService.CreateStudent(studentDto);
-
+        Console.WriteLine(student);
         return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, student);
     }
 
@@ -58,6 +58,7 @@ public class StudentController : ControllerBase
     [Authorize]
     public IActionResult DeleteStudent(int id)
     {
+        Console.WriteLine(id);
         var deletedStudent = _studentService.DeleteStudent(id);
 
         if (!deletedStudent) return NotFound();

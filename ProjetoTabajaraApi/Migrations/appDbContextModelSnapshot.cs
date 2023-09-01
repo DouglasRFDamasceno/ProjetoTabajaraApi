@@ -158,6 +158,11 @@ namespace ProjetoTabajaraApi.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("Complement")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -203,7 +208,6 @@ namespace ProjetoTabajaraApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasMaxLength(255)
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("FatherName")
