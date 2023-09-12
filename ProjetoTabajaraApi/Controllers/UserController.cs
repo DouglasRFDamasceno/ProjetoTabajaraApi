@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Castle.Core.Resource;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data.Dtos.User;
+using ProjetoTabajaraApi.Models;
 using ProjetoTabajaraApi.Services;
 using System.Net.Http.Headers;
 using System.Text;
@@ -11,7 +13,8 @@ using System.Text;
 namespace ProjetoTabajaraApi.Controllers
 {
     [ApiController]
-    [Route("[Controller]")]
+    [Route("api/[Controller]")]
+    [EnableCors("MyPolicy")]
     public class UserController : ControllerBase
     {
         public UserService _userService;
@@ -25,12 +28,21 @@ namespace ProjetoTabajaraApi.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("create"), Authorize]
-        public async Task<IActionResult> CreateUser(CreateUserDto userDto)
+        [HttpPost("create")]
+        [Authorize]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto userDto)
         {
-            await _userService.CreateUser(userDto);
+            Console.Write("Teste");
+            var user = await _userService.CreateUser(userDto);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+        }
 
-            return Ok("Usuário cadastrado com sucesso!");
+        [HttpDelete("{id}")]
+        [Authorize]
+        public IActionResult DeleteUser(string id)
+        {
+            var actionResult = _userService.DeleteUser(id);
+            return Ok(actionResult);
         }
 
         [HttpGet(""), Authorize]
@@ -41,13 +53,18 @@ namespace ProjetoTabajaraApi.Controllers
             return Ok(usersDto);
         }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchUser(string id, [FromBody] JsonPatchDocument<UpdateUserDto> patch)
+        [HttpGet("{id}"), Authorize]
+        public IActionResult GetUser(string id)
         {
-            await Console.Out.WriteLineAsync(id);
+            ReadUserDto? usersDto = _userService.GetUser(id);
 
-            return Ok();
-            //return await _userService.PatchUser(patch);
+            return Ok(usersDto);
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PatchUser(string id, [FromBody] JsonPatchDocument<UpdateUserDto> patch)
+        {
+            return _userService.PatchUser(id, patch);
         }
 
         [HttpPost("login")]

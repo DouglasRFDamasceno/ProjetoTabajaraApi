@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Internal;
 using Microsoft.AspNetCore.Mvc;
+using ProjetoTabajaraApi.Controllers;
 using ProjetoTabajaraApi.Data;
 using ProjetoTabajaraApi.Data.Dtos.User;
 using ProjetoTabajaraApi.Models;
@@ -31,47 +34,68 @@ public class UserService : ControllerBase
         _context = context;
     }
 
-    public async Task CreateUser(CreateUserDto userDto)
+    [HttpPost("create")]
+    [Authorize]
+    public async Task<User> CreateUser(CreateUserDto userDto)
     {
-        User user = _mapper.Map<User>(userDto);
-
-        IdentityResult result = await _userManager.CreateAsync(user, userDto.Password);
-
-        if (!result.Succeeded)
+        try
         {
-            throw new ApplicationException("Falha ao cadastrar o usuário.");
+            User user = _mapper.Map<User>(userDto);
+
+            IdentityResult result = await _userManager.CreateAsync(user, userDto.Password);
+
+            if (!result.Succeeded)
+            {
+                throw new ApplicationException("Falha ao cadastrar o usuário.");
+            }
+
+            return user;
+
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException($"Erro interno do servidor ao cadastrar o usuário. Erro: {ex.Message}");
         }
     }
 
+    [HttpPost("login")]
     public async Task<string> Login(LoginUserDto loginDto)
     {
-        var result = await _signInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, false, false);
-
-        if (!result.Succeeded)
+        try
         {
-            throw new ApplicationException("Usuário não autenticado");
+            var result = await _signInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, false, false);
+
+            if (!result.Succeeded)
+            {
+                throw new ApplicationException("Usuário não autenticado");
+            }
+            var user = _signInManager
+                .UserManager
+                .Users
+                .FirstOrDefault
+                (user => 
+                    user.NormalizedUserName ==  loginDto.UserName.ToUpper()
+                );
+
+            if (user == null) return "";
+
+            var token = _tokenService.GenerateToken(user);
+
+            return token;
+        } 
+        catch (Exception ex)
+        {
+            return $"Erro grave ao obter o token. Erro: {ex.Message}";
         }
-
-        var user = _signInManager
-            .UserManager
-            .Users
-            .FirstOrDefault
-            (user => 
-                user.NormalizedUserName ==  loginDto.UserName.ToUpper()
-            );
-
-        if (user == null) return "";
-
-        var token = _tokenService.GenerateToken(user);
-
-        return token;
     }
 
+    [HttpGet("")]
+    [Authorize]
     public List<ReadUserDto> GetUsers(int skip, int take)
     {
         try
         {
-            List<User>? users= _context!.Users?
+            List<User>? users = _context!.Users?
                 .OrderByDescending(user => user.UserName)
                 .Skip(skip)
                 .Take(take)
@@ -84,18 +108,28 @@ public class UserService : ControllerBase
             return usersDto;
         } catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            Console.WriteLine(ex.Message);
             return new List<ReadUserDto>();
         }
     }
 
-    public async Task<IActionResult> PatchUser(string id, JsonPatchDocument<UpdateUserDto> patch)
+    [HttpPatch("{id}")]
+    [Authorize]
+    public IActionResult PatchUser(string id, JsonPatchDocument<UpdateUserDto> patch)
     {
-        var user = _context.Users.FirstOrDefault(user => user.Id == id);
+        if (string.IsNullOrEmpty(id))
+        {
+            return BadRequest("O ID do usuário é inválido.");
+        }
 
-        if (user == null) return NotFound();
+        User? user = _context.Users.FirstOrDefault(user => user.Id == id);
 
-        var userToUpdate = _mapper.Map<UpdateUserDto>(user);
+        if (user == null)
+        {
+            return NotFound("Usuário não encontrado.");
+        }
+
+        UpdateUserDto userToUpdate = _mapper.Map<UpdateUserDto>(user);
 
         patch.ApplyTo(userToUpdate, ModelState);
 
@@ -104,8 +138,65 @@ public class UserService : ControllerBase
             return ValidationProblem(ModelState);
         }
 
-        _mapper.Map(userToUpdate, user);
-        await _context.SaveChangesAsync();
-        return NoContent();
+        try
+        {
+            // Mapeamento reverso após a validação do modelo.
+            _mapper.Map(userToUpdate, user);
+            _context.SaveChanges();
+            return NoContent(); // Retorna um status 204 (No Content) em caso de sucesso.
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Ocorreu um erro ao atualizar o usuário: {ex.Message}");
+        }
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize]
+    public IActionResult DeleteUser(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return BadRequest("O ID do usuário é inválido.");
+        }
+
+        var user = _context.Users.FirstOrDefault(u => u.Id == id);
+
+        if (user == null)
+        {
+            return NotFound("Usuário não encontrado.");
+        }
+
+        // Verificar se o usuário autenticado tem permissão para excluir
+        // o usuário em questão aqui, se aplicável.
+        try
+        {
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+            return NoContent(); // Retorna um status 204 (No Content) em caso de sucesso.
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Ocorreu um erro ao excluir o usuário: {ex.Message}");
+        }
+    }
+
+    public ReadUserDto? GetUser(string id)
+    {
+        try
+        {
+            User? user = _context.Users.FirstOrDefault(user => user.Id == id);
+
+            if (user == null) return null;
+
+            var usersDto = _mapper.Map<ReadUserDto>(user);
+
+            return usersDto;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
     }
 }

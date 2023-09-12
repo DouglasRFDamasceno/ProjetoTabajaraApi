@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data.Dtos.Student;
 using ProjetoTabajaraApi.Services;
@@ -6,7 +7,8 @@ using ProjetoTabajaraApi.Services;
 namespace ProjetoTabajaraApi.Controllers;
 
 [ApiController]
-[Route("[Controller]")]
+[Route("api/[Controller]")]
+[EnableCors("MyPolicy")]
 public class StudentController : ControllerBase
 {
     public StudentService _studentService;
@@ -21,7 +23,6 @@ public class StudentController : ControllerBase
     public CreatedAtActionResult CreateStudent(CreateStudentDto studentDto)
     {
         var student = _studentService.CreateStudent(studentDto);
-        Console.WriteLine(student);
         return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, student);
     }
 

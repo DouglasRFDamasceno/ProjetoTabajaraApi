@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data.Dtos.Address;
 using ProjetoTabajaraApi.Models;
@@ -7,7 +8,8 @@ using ProjetoTabajaraApi.Services;
 namespace ProjetoTabajaraApi.Controllers;
 
 [ApiController]
-[Route("[Controller]")]
+[Route("api/[Controller]")]
+[EnableCors("MyPolicy")]
 public class AddressController : ControllerBase
 {
     public AddressService _addressService;
