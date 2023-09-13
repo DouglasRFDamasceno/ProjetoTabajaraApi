@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data.Dtos.Student;
+using ProjetoTabajaraApi.Data.Dtos.User;
 using ProjetoTabajaraApi.Services;
 
 namespace ProjetoTabajaraApi.Controllers;
@@ -65,5 +67,12 @@ public class StudentController : ControllerBase
         if (!deletedStudent) return NotFound();
 
         return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    [Authorize]
+    public IActionResult PatchStudent(string id, [FromBody] JsonPatchDocument<UpdateStudentDto> patch)
+    {
+        return _studentService.PatchStudent(id, patch);
     }
 }

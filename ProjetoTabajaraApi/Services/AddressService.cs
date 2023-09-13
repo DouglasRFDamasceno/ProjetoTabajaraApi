@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data;
 using ProjetoTabajaraApi.Data.Dtos.Address;
+using ProjetoTabajaraApi.Data.Dtos.Student;
 using ProjetoTabajaraApi.Models;
 
 namespace ProjetoTabajaraApi.Services;
 
-public class AddressService
+public class AddressService : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly appDbContext _context;
@@ -76,5 +79,41 @@ public class AddressService
             .ToList();
 
         return adresses;
+    }
+
+    public IActionResult PatchAddress(string id, JsonPatchDocument<UpdateAddressDto> patch)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return BadRequest("O ID do estudante é inválido.");
+        }
+
+        Address? address = _context.Adresses.FirstOrDefault(address => address.Id == int.Parse(id));
+
+        if (address == null)
+        {
+            return NotFound("Estudante não encontrado.");
+        }
+
+        UpdateAddressDto addressToUpdate = _mapper.Map<UpdateAddressDto>(address);
+
+        patch.ApplyTo(addressToUpdate, ModelState);
+
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        try
+        {
+            // Mapeamento reverso após a validação do modelo.
+            _mapper.Map(addressToUpdate, address);
+            _context.SaveChanges();
+            return Ok(addressToUpdate); // Retorna um status 204 (No Content) em caso de sucesso.
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Ocorreu um erro ao atualizar o usuário: {ex.Message}");
+        }
     }
 }

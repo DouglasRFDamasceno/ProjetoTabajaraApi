@@ -32,7 +32,6 @@ namespace ProjetoTabajaraApi.Controllers
         [Authorize]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto userDto)
         {
-            Console.Write("Teste");
             var user = await _userService.CreateUser(userDto);
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
@@ -62,6 +61,7 @@ namespace ProjetoTabajaraApi.Controllers
         }
 
         [HttpPatch("{id}")]
+        [Authorize]
         public IActionResult PatchUser(string id, [FromBody] JsonPatchDocument<UpdateUserDto> patch)
         {
             return _userService.PatchUser(id, patch);

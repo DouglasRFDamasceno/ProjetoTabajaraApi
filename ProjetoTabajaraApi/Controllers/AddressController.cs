@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data.Dtos.Address;
 using ProjetoTabajaraApi.Models;
@@ -65,5 +66,12 @@ public class AddressController : ControllerBase
         if(!deletedAddress) return NotFound();
 
         return NoContent();
+    }
+
+    [HttpPatch("{id}")]
+    [Authorize]
+    public IActionResult PatchAddress(string id, [FromBody] JsonPatchDocument<UpdateAddressDto> patch)
+    {
+        return _addressService.PatchAddress(id, patch);
     }
 }
