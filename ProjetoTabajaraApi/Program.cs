@@ -74,6 +74,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<AddressService>();
+builder.Services.AddScoped<AttendanceService>();
 
 var app = builder.Build();
 

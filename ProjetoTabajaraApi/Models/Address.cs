@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjetoTabajaraApi.Models;
 
@@ -38,6 +39,11 @@ public class Address
     [Required(ErrorMessage = "O país é obrigatório")]
     [MaxLength(255)]
     public string Country { get; set; }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public DateTime Create_time { get; set; }
+
+    public DateTime Update_time { get; set; }
 
     public virtual Student Student { get; set; }
 }

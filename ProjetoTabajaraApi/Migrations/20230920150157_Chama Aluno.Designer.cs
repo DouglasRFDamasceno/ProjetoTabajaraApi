@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetoTabajaraApi.Data;
 
@@ -10,9 +11,10 @@ using ProjetoTabajaraApi.Data;
 namespace ProjetoTabajaraApi.Migrations
 {
     [DbContext(typeof(appDbContext))]
-    partial class appDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230920150157_Chama Aluno")]
+    partial class ChamaAluno
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,10 +170,6 @@ namespace ProjetoTabajaraApi.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("Create_time")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Neighborhood")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -192,9 +190,6 @@ namespace ProjetoTabajaraApi.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("Update_time")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("ZipCode")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -211,10 +206,6 @@ namespace ProjetoTabajaraApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("Create_time")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
@@ -225,12 +216,6 @@ namespace ProjetoTabajaraApi.Migrations
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Update_time")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("studentPresent")
-                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -262,10 +247,6 @@ namespace ProjetoTabajaraApi.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
-
-                    b.Property<DateTime>("Create_time")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)");
@@ -333,9 +314,6 @@ namespace ProjetoTabajaraApi.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("Update_time")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Weight")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -360,10 +338,6 @@ namespace ProjetoTabajaraApi.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Create_time")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)");
@@ -403,9 +377,6 @@ namespace ProjetoTabajaraApi.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("Update_time")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)

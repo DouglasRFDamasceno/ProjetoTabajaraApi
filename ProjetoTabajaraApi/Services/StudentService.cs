@@ -15,56 +15,83 @@ public class StudentService
         _mapper = mapper;
         _context = context;
     }
-    public Student CreateStudent(CreateStudentDto studentDto)
+    public Student? CreateStudent(CreateStudentDto studentDto)
     {
-        Console.WriteLine(studentDto);
-        Student student = _mapper!.Map<Student>(studentDto);
-
-        _context.Students.Add(student);
-        _context.SaveChanges();
-
-        if (student == null)
+        try
         {
-            throw new ApplicationException("Falha ao cadastrar o estudante");
-        }
+            Student student = _mapper!.Map<Student>(studentDto);
 
-        return student;
+            _context.Students.Add(student);
+            _context.SaveChanges();
+
+            if (student == null)
+            {
+                throw new ApplicationException("Falha ao cadastrar o estudante");
+            }
+
+            return student;
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao criar o estudante. Erro {ex}");
+            return null;
+        }
     }
 
     public ReadStudentDto? GetStudent(int id)
     {
-        Student? student = _context!.Students?.FirstOrDefault(student => student.Id == id);
-
-        if (student == null)
+        try
         {
+            Student? student = _context!.Students?.FirstOrDefault(student => student.Id == id);
+
+            if (student == null)
+            {
+                return null;
+            }
+
+            ReadStudentDto studentDto = _mapper.Map<ReadStudentDto>(student);
+            return studentDto;
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao obter o estudante. Erro {ex}");
             return null;
         }
-
-        ReadStudentDto studentDto = _mapper.Map<ReadStudentDto>(student);
-        return studentDto;
     }
 
     public UpdateStudentDto? UpdateStudent(int id, UpdateStudentDto studentDto)
     {
-        var student = _context!.Students?.FirstOrDefault(student => student.Id == id);
+        try
+        {
+            var student = _context!.Students?.FirstOrDefault(student => student.Id == id);
 
-        if (student == null) return null;
+            if (student == null) return null;
 
-        _mapper.Map(studentDto, student);
-        _context.SaveChanges();
+            _mapper.Map(studentDto, student);
+            _context.SaveChanges();
 
-        return studentDto;
+            return studentDto;
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao atualziar o estudante. Erro {ex}");
+            return null;
+        }
     }
 
     public bool DeleteStudent(int id)
     {
-        var student = _context.Students.FirstOrDefault(student => student.Id == id);
+        try
+        {
+            var student = _context.Students.FirstOrDefault(student => student.Id == id);
 
-        if (student == null) return false;
+            if (student == null) return false;
 
-        _context.Remove(student);
-        _context.SaveChanges();
-        return true;
+            _context.Remove(student);
+            _context.SaveChanges();
+            return true;
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao remover o estudante. Erro {ex}");
+            return false;
+        }
     }
 
     public List<ReadStudentDto> GetStudents(int skip, int take)
@@ -84,7 +111,7 @@ public class StudentService
             return studentsDto;
         } catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            Console.WriteLine($"Erro ao obter os estudantes. Erro {ex}");
             return new List<ReadStudentDto>();
         }
     }

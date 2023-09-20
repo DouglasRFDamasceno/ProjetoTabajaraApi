@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjetoTabajaraApi.Models;
 
@@ -71,4 +72,11 @@ public class Student
 
     [Required(ErrorMessage = "A data de início é obrigatória")]
     public DateTime StartDate { get; set; }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public DateTime Create_time { get; set; }
+
+    public DateTime Update_time { get; set; }
+
+    public virtual ICollection<Attendance> Attendances { get; set; }
 }

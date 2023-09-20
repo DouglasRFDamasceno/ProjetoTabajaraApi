@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetoTabajaraApi.Data;
 
@@ -10,9 +11,10 @@ using ProjetoTabajaraApi.Data;
 namespace ProjetoTabajaraApi.Migrations
 {
     [DbContext(typeof(appDbContext))]
-    partial class appDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230920152658_atualização de data na presença")]
+    partial class atualizaçãodedatanapresença
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,9 +230,6 @@ namespace ProjetoTabajaraApi.Migrations
 
                     b.Property<DateTime>("Update_time")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("studentPresent")
-                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 

@@ -10,5 +10,6 @@ namespace ProjetoTabajaraApi.Data
 
         public DbSet<Student> Students { get; set; }
         public DbSet<Address> Adresses { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
     }
 }
