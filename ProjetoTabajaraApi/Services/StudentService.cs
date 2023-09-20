@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data;
 using ProjetoTabajaraApi.Data.Dtos.Student;
+using ProjetoTabajaraApi.Data.Dtos.User;
 using ProjetoTabajaraApi.Models;
 
 namespace ProjetoTabajaraApi.Services;
 
-public class StudentService
+public class StudentService: ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly appDbContext _context;
@@ -73,6 +77,42 @@ public class StudentService
         {
             Console.WriteLine($"Erro ao atualziar o estudante. Erro {ex}");
             return null;
+        }
+    }
+
+    public IActionResult PatchStudent(string id, JsonPatchDocument<UpdateStudentDto> patch)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return BadRequest("O ID do estudante é inválido.");
+        }
+
+        Student? student = _context.Students.FirstOrDefault(student => student.Id == int.Parse(id));
+
+        if (student == null)
+        {
+            return NotFound("Estudante não encontrado.");
+        }
+
+        UpdateStudentDto studentToUpdate = _mapper.Map<UpdateStudentDto>(student);
+
+        patch.ApplyTo(studentToUpdate, ModelState);
+
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        try
+        {
+            // Mapeamento reverso após a validação do modelo.
+            _mapper.Map(studentToUpdate, student);
+            _context.SaveChanges();
+            return Ok(studentToUpdate); // Retorna um status 204 (No Content) em caso de sucesso.
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Ocorreu um erro ao atualizar o usuário: {ex.Message}");
         }
     }
 

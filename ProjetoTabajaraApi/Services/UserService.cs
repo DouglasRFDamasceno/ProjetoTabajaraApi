@@ -64,11 +64,12 @@ public class UserService : ControllerBase
         try
         {
             var result = await _signInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, false, false);
-
+            
             if (!result.Succeeded)
             {
                 throw new ApplicationException("Usuário não autenticado");
             }
+
             var user = _signInManager
                 .UserManager
                 .Users
@@ -80,7 +81,6 @@ public class UserService : ControllerBase
             if (user == null) return "";
 
             var token = _tokenService.GenerateToken(user);
-
             return token;
         } 
         catch (Exception ex)
