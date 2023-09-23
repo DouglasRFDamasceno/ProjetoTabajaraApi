@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProjetoTabajaraApi.Data;
 using ProjetoTabajaraApi.Data.Dtos.Student;
 using ProjetoTabajaraApi.Data.Dtos.User;
@@ -134,25 +136,43 @@ public class StudentService: ControllerBase
         }
     }
 
-    public List<ReadStudentDto> GetStudents(int skip, int take)
+    public object GetStudents(DateTime date, int skip, int take)
     {
         try
         {
-            List<Student>? students = _context!.Students?
-                .OrderByDescending(student => student.Name)
-                .Skip(skip)
-                .Take(take)
-                .ToList();
+            // Total de estudantes que existem na base de dados
+            int totalStudents = _context.Students.Count();
 
-            if (students == null) return new List<ReadStudentDto>();
+            IQueryable<Student> query = _context.Students
+                .OrderBy(student => student.Name)
+                .Skip(skip)
+                .Take(take);
+
+            if (date != DateTime.MinValue)
+            {
+                query = query
+                    .Include(student => student.Attendances)
+                    .Where(student => student.Attendances.Any(attendance => attendance.Date.Date == date.Date));
+
+                // Sobreescrita do total caso a data da presença seja informada
+                totalStudents = query.Count();
+            }
+
+            List<Student> students = query.ToList();
+
+            if (students == null)
+            {
+                return new { students = new List<ReadStudentDto>(), totalStudents = 0 };
+            }
 
             var studentsDto = _mapper.Map<List<ReadStudentDto>>(students);
 
-            return studentsDto;
-        } catch (Exception ex)
+            return new { students = studentsDto, totalStudents };
+        }
+        catch (Exception ex)
         {
             Console.WriteLine($"Erro ao obter os estudantes. Erro {ex}");
-            return new List<ReadStudentDto>();
+            return new { students = new List<ReadStudentDto>(), totalStudents = 0 };
         }
     }
 }

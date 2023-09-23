@@ -5,9 +5,17 @@ namespace ProjetoTabajaraApi.Data.Dtos.Attendance
 {
     public class ReadAttendanceDto
     {
-        public DateTime date { get; set; }
+        public DateTime Date { get; set; }
 
-        public int studentId { get; set; }
-        public ReadStudentDto Student { get; set; }
+        public bool StudentPresent { get; set; }
+
+        [MaxLength(255)]
+        public string Location { get; set; }
+
+        public DateTime Create_time { get; set; }
+
+        public DateTime Update_time { get; set; }
+
+        public int StudentId { get; set; }
     }
 }

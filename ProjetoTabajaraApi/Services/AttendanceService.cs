@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoTabajaraApi.Data;
 using ProjetoTabajaraApi.Data.Dtos.Attendance;
@@ -18,45 +19,48 @@ namespace ProjetoTabajaraApi.Services
             _context = context;
         }
 
-        public bool CreateOrUpdateAttendance(List<CreateAttendanceDto> attendancesDto)
+        public bool CreateOrUpdateAttendance(CreateAttendanceDto attendanceDto)
         {
-            Console.WriteLine(attendancesDto);
             //List<Attendance> attendances = MapList(attendancesDto);
+            Attendance newAttendance = _mapper.Map<Attendance>(attendanceDto);
 
-            //try
-            //{
-            //    if (attendances == null)
-            //    {
-            //        throw new ApplicationException("Falha ao cadastrar a presença");
-            //    }
+            try
+            {
+                if (newAttendance == null)
+                {
+                    throw new ApplicationException("Falha ao cadastrar a presença");
+                }
 
-            //    foreach (var attendance in attendances)
-            //    {
-            //        var existingAttendance = _context.Attendances.FirstOrDefault(a => a.Id == attendance.Id);
+                //foreach (var attendance in attendances)
+                //{
+                    var existingAttendance = _context.Attendances
+                        .FirstOrDefault(attendance => attendance.Date.Date == newAttendance.Date.Date && attendance.StudentId == newAttendance.StudentId);
 
-            //        if (existingAttendance != null)
-            //        {
-            //            // Atualize as propriedades do registro existente com os valores do novo objeto "attendance"
-            //            _context.Entry(existingAttendance).CurrentValues.SetValues(attendance);
-            //        }
-            //        else
-            //        {
-            //            // Se o registro não existir, adicione-o
-            //            _context.Attendances.Add(attendance);
-            //        }
-            //    }
+                    if (existingAttendance != null)
+                    {
+                        // Atualize as propriedades do registro existente com os valores do novo objeto "attendance"
+                        existingAttendance.Date = newAttendance.Date;
+                        existingAttendance.Location = newAttendance.Location;
+                        existingAttendance.StudentId = newAttendance.StudentId;
+                        existingAttendance.StudentPresent = newAttendance.StudentPresent;
+                        existingAttendance.Update_time = DateTime.Now;
+                }
+                    else
+                    {
+                    // Se o registro não existir, adicione-o
+                    _context.Attendances.Add(newAttendance);
+                    }
+                //}
 
-            //    _context.SaveChanges();
+                _context.SaveChanges();
 
-            //    return true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"Erro cadastrar a presença. Erro: {ex}");
-            //    return false;
-            //}
-
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro cadastrar a presença. Erro: {ex}");
+                return false;
+            }
         }
 
         internal bool DeleteAttendance(int id)
@@ -97,14 +101,16 @@ namespace ProjetoTabajaraApi.Services
             }
         }
 
-        internal List<ReadAttendanceDto> GetAttendances(int skip, int take)
+        internal List<ReadAttendanceDto> GetAttendances(DateTime startDate, DateTime finalDate)
         {
+            Console.WriteLine(startDate);
+            Console.WriteLine(finalDate);
+
             try
             {
                 List<Attendance>? attendances = _context!.Attendances?
-                    .OrderByDescending(attendances => attendances.Date)
-                    .Skip(skip)
-                    .Take(take)
+                    .OrderByDescending(attendance => attendance.Date)
+                    .Where(attendance => attendance.Date.Date >= startDate.Date && attendance.Date.Date <= finalDate.Date)
                     .ToList();
 
                 if (attendances == null) return new List<ReadAttendanceDto>();

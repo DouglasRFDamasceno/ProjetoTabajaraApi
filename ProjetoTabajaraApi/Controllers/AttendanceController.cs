@@ -22,9 +22,9 @@ namespace ProjetoTabajaraApi.Controllers
 
         [HttpPost("createOrUpdate")]
         [Authorize]
-        public bool CreateOrUpdateAttendance([FromBody] List<CreateAttendanceDto> attendancesDto)
+        public bool CreateOrUpdateAttendance(CreateAttendanceDto attendanceDto)
         {
-            bool isOk = _attendanceService.CreateOrUpdateAttendance(attendancesDto);
+            bool isOk = _attendanceService.CreateOrUpdateAttendance(attendanceDto);
             return isOk;
         }
 
@@ -50,9 +50,9 @@ namespace ProjetoTabajaraApi.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult GetAttendances(int skip = 0, int take = 50)
+        public IActionResult GetAttendances(DateTime startDate, DateTime finalDate)
         {
-            var attendanceDto = _attendanceService.GetAttendances(skip, take);
+            var attendanceDto = _attendanceService.GetAttendances(startDate, finalDate);
 
             return Ok(attendanceDto);
         }

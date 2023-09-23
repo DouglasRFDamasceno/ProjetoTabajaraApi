@@ -1,4 +1,5 @@
 using ProjetoTabajaraApi.Data.Dtos.Address;
+using ProjetoTabajaraApi.Data.Dtos.Attendance;
 using System.ComponentModel.DataAnnotations;
 
 namespace ProjetoTabajaraApi.Data.Dtos.Student;
@@ -26,4 +27,5 @@ public class ReadStudentDto
     public string Height { get; set; }
     public string Weight { get; set; }
     public DateTime StartDate { get; set; }
+    public ICollection<ReadAttendanceDto> Attendances { get; set; }
 }

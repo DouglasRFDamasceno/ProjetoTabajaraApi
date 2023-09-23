@@ -50,11 +50,11 @@ public class StudentController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public IActionResult GetStudents(int skip = 0, int take = 50)
+    public IActionResult GetStudents(DateTime date, int skip = 0, int take = 50)
     {
-        var studentsDto = _studentService.GetStudents(skip, take);
+        var objectStudents = _studentService.GetStudents(date, skip, take);
 
-        return Ok(studentsDto);
+        return Ok(objectStudents);
     }
 
     [HttpDelete("{id}")]

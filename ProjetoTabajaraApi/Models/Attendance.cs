@@ -13,7 +13,7 @@ namespace ProjetoTabajaraApi.Models
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "O presença é obrigatória.")]
-        public bool studentPresent { get; set; }
+        public bool StudentPresent { get; set; }
 
         [Required(ErrorMessage = "O local do treino é obrigatório")]
         [MaxLength(255)]

@@ -12,11 +12,18 @@ public class StudentProfile : Profile
         CreateMap<UpdateStudentDto, Student>();
         CreateMap<Student, UpdateStudentDto>();
         CreateMap<ReadStudentDto, Student>();
+        // Obtém a presença de 30 dias anterios ao dia da busca
         CreateMap<Student, ReadStudentDto>()
             .ForMember(
-                studentDto => 
+                studentDto =>
                 studentDto.Address,
                 opt => opt.MapFrom(student => student.Address)
+            ).ForMember(
+                studentDto =>
+                studentDto.Attendances,
+                opt => opt.MapFrom(student =>
+                    student.Attendances.Where(attendance => attendance.Date >= DateTime.Now.AddDays(-30))
+                )
             );
     }
 }
